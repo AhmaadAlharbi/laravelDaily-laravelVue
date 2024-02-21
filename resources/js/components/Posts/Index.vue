@@ -19,6 +19,12 @@
             <th class="px-6 py-3 bg-gray-50 text-left">
               <span
                 class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
+                >Category</span
+              >
+            </th>
+            <th class="px-6 py-3 bg-gray-50 text-left">
+              <span
+                class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
                 >Content</span
               >
             </th>
@@ -31,7 +37,7 @@
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200 divide-solid">
-          <tr v-for="post in posts" :key="post.id">
+          <tr v-for="post in posts.data" :key="post.id">
             <td
               class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900"
             >
@@ -41,6 +47,11 @@
               class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900"
             >
               {{ post.title }}
+            </td>
+            <td
+              class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900"
+            >
+              {{ post.category }}
             </td>
             <td
               class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900"
@@ -55,6 +66,11 @@
           </tr>
         </tbody>
       </table>
+      <TailwindPagination
+        :data="posts"
+        @pagination-change-page="getPosts"
+        class="mt-4"
+      />
     </div>
   </div>
 </template>
@@ -62,6 +78,8 @@
 <script setup>
 import { onMounted } from "vue";
 import usePosts from "@/composables/posts";
+import { TailwindPagination } from "laravel-vue-pagination";
+
 const { posts, getPosts } = usePosts();
 onMounted(() => {
   getPosts();
