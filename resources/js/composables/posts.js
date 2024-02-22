@@ -5,6 +5,8 @@ export default function usePosts() {
     const posts = ref({});
     const router = useRouter();
     const validationErrors = ref({});
+
+    const isLoading = ref(false);
     const getPosts = async (
         page = 1,
         category = "",
@@ -28,16 +30,28 @@ export default function usePosts() {
     };
 
     const storePost = async (post) => {
+        if (isLoading.value) return;
+        isLoading.value = true;
+        validationErrors.value = {};
+        let serializedPost = new FormData();
+        for (let item in post) {
+            if (post.hasOwnProperty(item)) {
+                serializedPost.append(item, post[item]);
+            }
+        }
         axios
-            .post("/api/posts", post)
+            .post("/api/posts", serializedPost)
+
             .then((response) => {
                 router.push({ name: "posts.index" });
             })
             .catch((error) => {
                 if (error.response?.data) {
+                    isLoading.value = false;
+
                     validationErrors.value = error.response.data.errors;
                 }
             });
     };
-    return { posts, getPosts, storePost, validationErrors };
+    return { posts, getPosts, storePost, validationErrors, isLoading };
 }

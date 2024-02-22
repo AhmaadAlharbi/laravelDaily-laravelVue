@@ -63,13 +63,34 @@
         </div>
       </div>
     </div>
-
+    <!-- Thumbnail -->
+    <div class="mt-4">
+      <label for="thumbnail" class="block font-medium text-sm text-gray-700">
+        Thumbnail
+      </label>
+      <input
+        @change="post.thumbnail = $event.target.files[0]"
+        type="file"
+        id="thumbnail"
+      />
+      <div class="text-red-600 mt-1">
+        <div v-for="message in validationErrors?.thumbnail">
+          {{ message }}
+        </div>
+      </div>
+    </div>
     <!-- Buttons -->
     <div class="mt-4">
       <button
-        class="rounded-md bg-indigo-600 px-3 py-2 text-sm uppercase text-white"
+        :disabled="isLoading"
+        class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm uppercase text-white disabled:opacity-75 disabled:cursor-not-allowed"
       >
-        Save
+        <span
+          v-show="isLoading"
+          class="inline-block animate-spin w-4 h-4 mr-2 border-t-2 border-t-white border-r-2 border-r-white border-b-2 border-b-white border-l-2 border-l-blue-600 rounded-full"
+        ></span>
+        <span v-if="isLoading">Processing...</span>
+        <span v-else>Save</span>
       </button>
     </div>
   </form>
@@ -79,11 +100,12 @@ import useCategories from "@/composables/categories.js";
 import usePosts from "@/composables/posts";
 import { onMounted, reactive } from "vue";
 const { categories, getCategories } = useCategories();
-const { storePost, validationErrors } = usePosts();
+const { storePost, validationErrors, isLoading } = usePosts();
 const post = reactive({
   title: "",
   content: "",
   category_id: "",
+  thumbnail: "",
 });
 onMounted(() => {
   getCategories();
