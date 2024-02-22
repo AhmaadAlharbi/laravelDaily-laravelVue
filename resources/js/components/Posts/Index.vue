@@ -83,7 +83,7 @@
       </table>
       <TailwindPagination
         :data="posts"
-        @pagination-change-page="getPosts"
+        @pagination-change-page="(page) => getPosts(page, selectedCategory)"
         class="mt-4"
       />
     </div>
@@ -91,7 +91,7 @@
 </template>
  
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import usePosts from "@/composables/posts";
 import useCategories from "@/composables/categories";
 import { TailwindPagination } from "laravel-vue-pagination";
@@ -99,6 +99,9 @@ import { TailwindPagination } from "laravel-vue-pagination";
 const selectedCategory = ref("");
 const { posts, getPosts } = usePosts();
 const { categories, getCategories } = useCategories();
+watch(selectedCategory, (current, previous) => {
+  getPosts(1, current);
+});
 onMounted(() => {
   getPosts();
   getCategories();
