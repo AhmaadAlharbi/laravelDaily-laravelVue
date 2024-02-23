@@ -189,6 +189,9 @@
               <router-link :to="{ name: 'posts.edit', params: { id: post.id } }"
                 >Edit</router-link
               >
+              <a href="#" @click.prevent="deletePost(post.id)" class="ml-2"
+                >Delete</a
+              >
             </td>
           </tr>
         </tbody>
@@ -211,7 +214,7 @@ import { TailwindPagination } from "laravel-vue-pagination";
 const selectedCategory = ref("");
 const orderColumn = ref("created_at");
 const orderDirection = ref("desc");
-const { posts, getPosts } = usePosts();
+const { posts, getPosts, deletePost } = usePosts();
 const { categories, getCategories } = useCategories();
 const updateOrdering = (column) => {
   orderColumn.value = column;
